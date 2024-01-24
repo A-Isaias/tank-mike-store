@@ -20,6 +20,14 @@
 
 		if ($do == 'Manage') {
 
+			// Verificar si se ha enviado un formulario de búsqueda
+			if (isset($_GET['search'])) {
+				$search = $_GET['search'];
+				$searchCondition = "WHERE items.Name LIKE '%$search%'";
+			} else {
+				$search = '';
+				$searchCondition = '';
+			}
 
 			$stmt = $con->prepare("SELECT 
 										items.*, 
@@ -35,82 +43,97 @@
 										users 
 									ON 
 										users.UserID = items.Member_ID
+									$searchCondition
 									ORDER BY 
 										Item_ID DESC");
 
 			// Execute The Statement
-
 			$stmt->execute();
 
 			// Assign To Variable 
-
 			$items = $stmt->fetchAll();
 
-			if (! empty($items)) {
+			if (!empty($items)) {
 
 			?>
 
-			<h1 class="text-center">Manage Items</h1>
+<h1 class="text-center">Manage Items</h1>
 			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<a href="items.php?do=Add" class="btn btn-sm btn-primary">
+							<i class="fa fa-plus"></i> New Item
+						</a>
+					</div>
+					<div class="col-md-6 text-right">
+						<form class="form-inline" action="" method="GET">
+							<div class="form-group mr-2">
+								<input type="text" class="form-control" name="search" placeholder="Search">
+							</div>
+							<button type="submit" class="btn btn-secondary">Search</button>
+							<a href="items.php" class="btn btn-info">Show All</a>
+						</form>
+					</div>
+				</div>
 				<div class="table-responsive">
-					<table class="main-table manage-members text-center table table-bordered">
-						<tr>
-							<td>Picture</td>
-							<td>Item Name</td>
-							<td>Price</td>
-							<td>Codigo</td>
-							<td>Category</td>
-							<td>Owner</td>
-							<td>Action</td>
-						</tr>
-						<?php
-							foreach($items as $item) {
+						<table class="main-table manage-members text-center table table-bordered">
+							<tr>
+								<td>Picture</td>
+								<td>Item Name</td>
+								<td>Price</td>
+								<td>Codigo</td>
+								<td>Category</td>
+								<td>Owner</td>
+								<td>Action</td>
+							</tr>
+							<?php
+							foreach ($items as $item) {
 								echo "<tr>";
-									echo "<td>";
-									if (empty($item['picture'])) {
-										echo "<img src='uploads/default.png' alt='' />";
-									} else {
-										echo "<img src='uploads/items/" . $item['picture'] . "' alt='' />";
-									}
-									echo "</td>";
-									echo "<td>" . $item['Name'] . "</td>";
-									echo "<td>" . $item['Price'] . "</td>";
-									echo "<td>" . $item['Country_Made'] ."</td>"; 
-									echo "<td>" . $item['category_name'] ."</td>";
-									echo "<td>" . $item['Username'] ."</td>";
-									echo "<td>
-										<a href='items.php?do=Edit&itemid=" . $item['Item_ID'] . "' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-										<a href='items.php?do=Delete&itemid=" . $item['Item_ID'] . "' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
-										if ($item['Approve'] == 0) {
-											echo "<a 
+								echo "<td>";
+								if (empty($item['picture'])) {
+									echo "<img src='uploads/default.png' alt='' />";
+								} else {
+									echo "<img src='uploads/items/" . $item['picture'] . "' alt='' />";
+								}
+								echo "</td>";
+								echo "<td>" . $item['Name'] . "</td>";
+								echo "<td>" . $item['Price'] . "</td>";
+								echo "<td>" . $item['Country_Made'] . "</td>";
+								echo "<td>" . $item['category_name'] . "</td>";
+								echo "<td>" . $item['Username'] . "</td>";
+								echo "<td>
+											<a href='items.php?do=Edit&itemid=" . $item['Item_ID'] . "' class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
+											<a href='items.php?do=Delete&itemid=" . $item['Item_ID'] . "' class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>";
+								if ($item['Approve'] == 0) {
+									echo "<a 
 													href='items.php?do=Approve&itemid=" . $item['Item_ID'] . "' 
 													class='btn btn-info activate'>
 													<i class='fa fa-check'></i> Approve</a>";
-										}
-									echo "</td>";
+								}
+								echo "</td>";
 								echo "</tr>";
 							}
-						?>
-						<tr>
-					</table>
+							?>
+							<tr>
+						</table>
+					</div>
+					<a href="items.php?do=Add" class="btn btn-sm btn-primary">
+						<i class="fa fa-plus"></i> New Item
+					</a>
 				</div>
-				<a href="items.php?do=Add" class="btn btn-sm btn-primary">
-					<i class="fa fa-plus"></i> New Item
-				</a>
-			</div>
 
 			<?php } else {
 
 				echo '<div class="container">';
-					echo '<div class="nice-message">There\'s No Items To Show</div>';
-					echo '<a href="items.php?do=Add" class="btn btn-sm btn-primary">
+				echo '<div class="nice-message">There\'s No Items To Show</div>';
+				echo '<a href="items.php?do=Add" class="btn btn-sm btn-primary">
 							<i class="fa fa-plus"></i> New Item
 						</a>';
 				echo '</div>';
 
 			} ?>
 
-		<?php 
+		<?php
 
 		} elseif ($do == 'Add') { ?>
 
@@ -121,11 +144,11 @@
 					<div class="form-group form-group-lg">
 						<label class="col-sm-2 control-label">Name</label>
 						<div class="col-sm-10 col-md-6">
-							<input 
-								type="text" 
-								name="name" 
-								class="form-control" 
-								required="required"  
+							<input
+								type="text"
+								name="name"
+								class="form-control"
+								required="required"
 								placeholder="Name of The Item" />
 						</div>
 					</div>
@@ -134,61 +157,48 @@
 					<div class="form-group form-group-lg">
 						<label class="col-sm-2 control-label">Description</label>
 						<div class="col-sm-10 col-md-6">
-							<input 
-								type="text" 
-								name="description" 
-								class="form-control" 
-								required="required"  
+							<input
+								type="text"
+								name="description"
+								class="form-control"
+								required="required"
 								placeholder="Description of The Item" />
 						</div>
 					</div>
 					<!-- End Description Field -->
 					<!-- Start Price Field -->
 					<div class="form-group form-group-lg">
-						<label class="col-sm-2 control-label">Contact</label>
-						<div class="col-sm-10 col-md-6">
-							<input 
-								type="text" 
-								name="contact" 
-								class="form-control" 
-								required="required" 
-								placeholder="Phone Number of the Item owner" />
-						</div>
-					</div>
-					<!-- End Price Field -->
-					<!-- Start Price Field -->
-					<div class="form-group form-group-lg">
 						<label class="col-sm-2 control-label">Price</label>
 						<div class="col-sm-10 col-md-6">
-							<input 
-								type="text" 
-								name="price" 
-								class="form-control" 
-								required="required" 
+							<input
+								type="text"
+								name="price"
+								class="form-control"
+								required="required"
 								placeholder="Price of The Item" />
 						</div>
 					</div>
 					<!-- End Price Field -->
-					<!-- Start Country Field -->
+					<!-- Start Country_Made Field -->
 					<div class="form-group form-group-lg">
-						<label class="col-sm-2 control-label">Code</label>
+						<label class="col-sm-2 control-label">Country Made</label>
 						<div class="col-sm-10 col-md-6">
-							<input 
-								type="text" 
-								name="country" 
-								class="form-control" 
-								required="required" 
-								placeholder="Code" />
+							<input
+								type="text"
+								name="country"
+								class="form-control"
+								required="required"
+								placeholder="Country of Made" />
 						</div>
 					</div>
-					<!-- End Country Field -->
+					<!-- End Country_Made Field -->
 					<!-- Start Status Field -->
 					<div class="form-group form-group-lg">
 						<label class="col-sm-2 control-label">Status</label>
 						<div class="col-sm-10 col-md-6">
 							<select name="status">
 								<option value="0">...</option>
-								<option value="1" selected>New</option>
+								<option value="1">New</option>
 								<option value="2">Like New</option>
 								<option value="3">Used</option>
 								<option value="4">Very Old</option>
@@ -201,11 +211,14 @@
 						<label class="col-sm-2 control-label">Member</label>
 						<div class="col-sm-10 col-md-6">
 							<select name="member">
+								<option value="0">...</option>
 								<?php
-									$allMembers = getAllFrom("*", "users", "", "", "UserID");
-									foreach ($allMembers as $user) {
-										echo "<option value='" . $user['UserID'] . "'>" . $user['Username'] . "</option>";
-									}
+								$stmt = $con->prepare("SELECT * FROM users");
+								$stmt->execute();
+								$users = $stmt->fetchAll();
+								foreach ($users as $user) {
+									echo "<option value='" . $user['UserID'] . "'>" . $user['Username'] . "</option>";
+								}
 								?>
 							</select>
 						</div>
@@ -216,16 +229,14 @@
 						<label class="col-sm-2 control-label">Category</label>
 						<div class="col-sm-10 col-md-6">
 							<select name="category">
+								<option value="0">...</option>
 								<?php
-									$allCats = getAllFrom("*", "categories", "where parent = 0", "", "ID");
-									foreach ($allCats as $cat) {
-										$selected = $cat['Ordering'] == '1' ? 'selected' : '';
-										echo "<option value='" . $cat['ID'] . " " . $selected . "'>" . $cat['Name'] . "</option>";
-										$childCats = getAllFrom("*", "categories", "where parent = {$cat['ID']}", "", "ID");
-										foreach ($childCats as $child) {
-											echo "<option value='" . $child['ID'] . "'>--- " . $child['Name'] . "</option>";
-										}
-									}
+								$stmt2 = $con->prepare("SELECT * FROM categories");
+								$stmt2->execute();
+								$categories = $stmt2->fetchAll();
+								foreach ($categories as $category) {
+									echo "<option value='" . $category['ID'] . "'>" . $category['Name'] . "</option>";
+								}
 								?>
 							</select>
 						</div>
@@ -233,26 +244,27 @@
 					<!-- End Categories Field -->
 					<!-- Start Tags Field -->
 					<div class="form-group form-group-lg">
-						<label class="col-sm-2 control-label">Picture</label>
+						<label class="col-sm-2 control-label">Tags</label>
 						<div class="col-sm-10 col-md-6">
-							<input 
-								type="file" 
-								name="picture" 
-								class="form-control"  />
+							<input
+								type="text"
+								name="tags"
+								class="form-control"
+								placeholder="Separate Tags With Comma (,)" />
 						</div>
 					</div>
 					<!-- End Tags Field -->
-					<!-- Start Submit Field -->
+					<!-- Start submit Field -->
 					<div class="form-group form-group-lg">
 						<div class="col-sm-offset-2 col-sm-10">
 							<input type="submit" value="Add Item" class="btn btn-primary btn-sm" />
 						</div>
 					</div>
-					<!-- End Submit Field -->
+					<!-- End submit Field -->
 				</form>
 			</div>
 
-			<?php
+		<?php
 
 		} elseif ($do == 'Insert') {
 
@@ -263,30 +275,31 @@
 
 				// Upload Variables
 
-				$avatarName = $_FILES['picture']['name'];
-				$avatarSize = $_FILES['picture']['size'];
-				$avatarTmp	= $_FILES['picture']['tmp_name'];
-				$avatarType = $_FILES['picture']['type'];
+				$pictureName = $_FILES['picture']['name'];
+				$pictureSize = $_FILES['picture']['size'];
+				$pictureTmp = $_FILES['picture']['tmp_name'];
+				$pictureType = $_FILES['picture']['type'];
 
 				// List Of Allowed File Typed To Upload
 
-				$avatarAllowedExtension = array("jpeg", "jpg", "png", "gif");
+				$pictureAllowedExtension = array("jpeg", "jpg", "png", "gif");
 
-				// Get Avatar Extension
-				
-				$ref = explode('.', $avatarName);
-				$avatarExtension = strtolower(end($ref));
+				// Get Picture Extension
+
+				$tmp = explode('.', $pictureName);
+
+				$pictureExtension = strtolower(end($tmp));
 
 				// Get Variables From The Form
 
-				$name		= $_POST['name'];
+				$name 		= $_POST['name'];
 				$desc 		= $_POST['description'];
 				$price 		= $_POST['price'];
 				$country 	= $_POST['country'];
 				$status 	= $_POST['status'];
 				$member 	= $_POST['member'];
-				$cat 		= $_POST['category'];
-				$contact	= $_POST['contact'];
+				$category 	= $_POST['category'];
+				$tags 		= $_POST['tags'];
 
 				// Validate The Form
 

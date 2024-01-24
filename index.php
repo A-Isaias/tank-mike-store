@@ -4,10 +4,29 @@
     $pageTitle = 'Tank-Store';
     include 'init.php';
 ?>
-<div style="padding-top:50px;" class="container">
+
+<div class="container" style="margin-top: 20px;">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline mb-2" action="index.php" method="GET">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="search" placeholder="Ingrese marca o modelo">
+                </div>
+                <button type="submit" class="btn btn-primary ml-2">Buscar</button>
+                <a href="index.php" class="btn btn-info ml-2">Mostrar Todos</a>
+            </form>
+        </div>
+    </div>
+    <div style="margin-top: 20px;"></div>
     <div class="row">
     <?php
-    $allItems = getAllFrom('*', 'items', 'where Approve = 1', '', 'Item_ID');
+    // Verificar si se ha enviado una búsqueda
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+    // Construir la condición de búsqueda en la consulta SQL
+    $condition = !empty($search) ? "WHERE Name LIKE '%$search%'" : 'WHERE Approve = 1';
+
+    $allItems = getAllFrom('*', 'items', $condition, '', 'Item_ID');
     $count = 0; // Variable para llevar el conteo de tarjetas en la fila
 
     foreach ($allItems as $item) {
@@ -55,6 +74,7 @@
     echo '</div>';
     ?>
     </div>
+    <div style="margin-bottom: 20px;"></div>
 </div>
 
 <?php
