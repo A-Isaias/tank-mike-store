@@ -30,7 +30,7 @@
     $count = 0; // Variable para llevar el conteo de tarjetas en la fila
 
     foreach ($allItems as $item) {
-        echo '<div class="col-sm-6 col-md-3">';
+		echo '<div class="col-sm-12 col-md-6 col-lg-3">';
         echo '<div class="thumbnail item-box height-match">';
         
         // Modificación para mostrar "CONSULTAR" cuando el precio es 1
