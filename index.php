@@ -33,14 +33,26 @@
 		echo '<div class="col-sm-12 col-md-6 col-lg-3">';
         echo '<div class="thumbnail item-box height-match">';
         
+        // // Modificación para mostrar "CONSULTAR" cuando el precio es 1
+        // if ($item['Price'] == 1) {
+        //     echo '<span class="price-tag">CONSULTAR</span>';
+        // } else {
+        //     // Formatear el precio con un punto en los separadores de miles
+        //     $formattedPrice = '$' . number_format($item['Price'], 0, ',', '.');
+        //     echo '<span class="price-tag">' . $formattedPrice . '</span>';
+        // }
+            
         // Modificación para mostrar "CONSULTAR" cuando el precio es 1
         if ($item['Price'] == 1) {
-            echo '<span class="price-tag">CONSULTAR</span>';
+            echo '<span class="price-tag" style="font-size: 24px; background-color: rgba(255, 0, 0, 1);">CONSULTAR</span>';
         } else {
             // Formatear el precio con un punto en los separadores de miles
             $formattedPrice = '$' . number_format($item['Price'], 0, ',', '.');
-            echo '<span class="price-tag">' . $formattedPrice . '</span>';
+            echo '<span class="price-tag" style="font-size: 24px; background-color: rgba(255, 0, 0, 1);">' . $formattedPrice . '</span>';
         }
+
+        // Agregar un pequeño espacio debajo del precio
+        echo '<div style="margin-bottom: 30px;"></div>';
 
         if (empty($item['picture'])) {
             echo "<img style='width:100%;height:auto;' src='admin/uploads/default.png' alt='' />";
@@ -51,11 +63,16 @@
         echo '<div class="caption">';
         echo '<h3><a href="items.php?itemid='. $item['Item_ID'] .'" style="color: black">' . $item['Name'] .'</a></h3>';
         echo "<p style='overflow-wrap: normal;overflow: hidden;'>". $item['Description'] . '</p>';
-        
+                
+        // // Código y Botón de WhatsApp en la misma fila
+        // echo '<div class="item-buttons" style="display: flex; justify-content: space-between; align-items: center;">';
+        // echo '<span class="cod-label" style="font-size: 18px; font-weight: bold;">Cod: ' . $item['Country_Made'] . '</span>';
+        // echo '<a href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20' . $item['Country_Made'] . ',%20' . $item['Name'] . '" target="_blank" class="btn btn-success" style="margin-left: auto;">Pedir</a>';
         // Código y Botón de WhatsApp en la misma fila
         echo '<div class="item-buttons" style="display: flex; justify-content: space-between; align-items: center;">';
-        echo '<span class="cod-label" style="font-size: 18px; font-weight: bold;">Cod: ' . $item['Country_Made'] . '</span>';
-        echo '<a href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20' . $item['Country_Made'] . ',%20' . $item['Name'] . '" target="_blank" class="btn btn-success" style="margin-left: auto;">Pedir</a>';
+        echo '<span class="cod-label" style="font-size: 24px; font-weight: bold;">Cod: ' . $item['Country_Made'] . '</span>';
+        echo '<a href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20' . $item['Country_Made'] . ',%20' . $item['Name'] . '" target="_blank" class="btn btn-success" style="font-size: 24px; margin-left: auto;">Pedir</a>';
+        
         echo '</div>';
         
         echo '</div>';

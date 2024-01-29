@@ -1,0 +1,31 @@
+/* CSS para pantallas más pequeñas */
+
+/* Establece el tamaño de fuente base */
+html {
+    font-size: 16px; /* Puedes ajustar este valor según tus preferencias */
+}
+
+/* Utiliza medidas de fuente relativas para los elementos */
+body, h1, .form-control, .item-buttons, .caption h3, .caption p, .cod-label {
+    font-size: 1em; /* Utiliza em para el tamaño de fuente */
+}
+
+/* Ajusta el tamaño de fuente específico para h1 en pantallas más pequeñas */
+@media (max-width: 767px) {
+    h1 {
+        font-size: 40px; /* Tamaño de fuente más grande para pantallas pequeñas */
+    }
+
+    /* Otros ajustes de tamaño de fuente para elementos específicos en pantallas más pequeñas */
+    .caption h3 {
+        font-size: 18px;
+    }
+
+    .caption p {
+        font-size: 14px;
+    }
+
+    .cod-label {
+        font-size: 16px;
+    }
+}
