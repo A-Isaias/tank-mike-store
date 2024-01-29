@@ -27,6 +27,17 @@
     $condition = !empty($search) ? "WHERE Name LIKE '%$search%'" : 'WHERE Approve = 1';
 
     $allItems = getAllFrom('*', 'items', $condition, '', 'Item_ID');
+
+    // Contar el número de resultados de la búsqueda
+    $resultCount = count($allItems);
+
+    if ($resultCount == 0 && !empty($search)) {
+        // Si no se encontraron resultados y se realizó una búsqueda
+        echo '<div class="alert alert-warning" role="alert">Lo siento, no se encontraron resultados. ¡Pero puedes consultarnos aquí! ';
+        echo '<a href="https://wa.me/3364338670?text=Hola!%20Quisiera%20consultar%20por%20un%20tanque%20de%20radiador" target="_blank" class="btn btn-success" style="font-size: 18px; margin-left: 10px;">Consultar por WhatsApp</a>';
+        echo '</div>';
+    }
+
     $count = 0; // Variable para llevar el conteo de tarjetas en la fila
 
     foreach ($allItems as $item) {
