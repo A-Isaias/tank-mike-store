@@ -5,6 +5,8 @@
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
 
+	defined('LIB_VERSION') || define('LIB_VERSION', '1.' . date('d') . date('y') . date('m') . date('W'));
+
 	include 'admin/connect.php';
 
 	$sessionUser = '';

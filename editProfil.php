@@ -1,14 +1,15 @@
-<?php 
+<?php
 
-	session_start();
-	include 'init.php';
+session_start();
+include 'init.php';
 
 // Get the User ID from Session
 $do = isset($_GET['do']) ? $_GET['do'] : 'Manage';
-function getSingleValue($con, $sql, $parameters){
-    $q = $con->prepare($sql);
-    $q->execute($parameters);
-    return $q->fetchColumn();
+function getSingleValue($con, $sql, $parameters)
+{
+	$q = $con->prepare($sql);
+	$q->execute($parameters);
+	return $q->fetchColumn();
 }
 $userid = getSingleValue($con, "SELECT UserID FROM users WHERE username=?", [$_SESSION['user']]);
 
@@ -32,52 +33,45 @@ $count = $stmt->rowCount();
 
 if ($count > 0) { ?>
 
-    <h1 class="text-center">Edit My Informations</h1>
-    <div class="container">
-        <form class="form-horizontal" action="UpdateProfile.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="userid" value="<?php echo $userid ?>" />
-            <!-- Start Username Field -->
-            <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Username</label>
-                <div class="col-sm-10 col-md-6">
-                    <input type="text" name="username" class="form-control" value="<?php echo $row['Username'] ?>" autocomplete="off"/>
-                </div>
-            </div>
-            <!-- End Username Field -->
-            <!-- Start Password Field -->
-            <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Password</label>
-                <div class="col-sm-10 col-md-6">
-                    <input type="hidden" name="oldpassword" value="<?php echo $row['Password'] ?>" />
-                    <input type="password" name="newpassword" class="form-control" autocomplete="new-password" placeholder="Leave Blank If You Dont Want To Change" />
-                </div>
-            </div>
-            <!-- End Password Field -->
-            <!-- Start Email Field -->
-            <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Email</label>
-                <div class="col-sm-10 col-md-6">
-                    <input type="email" name="email" value="<?php echo $row['Email'] ?>" class="form-control"/>
-                </div>
-            </div>
-            <!-- End Email Field -->
-            <!-- Start Full Name Field -->
-            <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Full Name</label>
-                <div class="col-sm-10 col-md-6">
-                    <input type="text" name="full" value="<?php echo $row['FullName']; }?>" class="form-control"x />
-                </div>
-            </div>
-            <!-- End Full Name Field -->
-            <!-- Start Submit Field -->
-            <div class="form-group form-group-lg">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <input type="submit" value="Save" class="btn btn-primary btn-lg" />
-                </div>
-            </div>
-            <!-- End Submit Field -->
-        </form>
-    </div>
+	<h1 class="text-center">Edit My Information</h1>
+
+	<div class="container">
+
+		<form class="form-horizontal" action="UpdateProfile.php" method="POST" enctype="multipart/form-data">
+			<input type="hidden" name="userid" value="<?= $userid ?>" />
+			<div class="row mb-0">
+				<div class="col-sm mb-3 mb-sm-0">
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text" id="userName"><i class="bi bi-person-fill"></i></span>
+						<input type="text" class="form-control" placeholder="Username" aria-label="userName" aria-describedby="userName" value="<?= $row['Username'] ?>" >
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text" id="userName"><i class="bi bi-key"></i></span>
+						<input type="password" class="form-control" name="newpassword" placeholder="Leave Blank If You Dont Want To Change" autocomplete="new-password" aria-label="userName" aria-describedby="userName" >
+						<!-- <input type="password" name="newpassword" class="form-control" autocomplete="new-password" placeholder="Leave Blank If You Dont Want To Change" /> -->
+						<input type="hidden" name="oldpassword" value="<?= $row['Password'] ?>" />
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text" id="emailLbl"><i class="bi bi-at"></i></span>
+						<input type="email" class="form-control email" placeholder="Email" aria-label="Email" aria-describedby="emailLbl" value="<?= $row['Email'] ?>" >
+					</div>
+					<div class="input-group input-group-lg mb-3">
+						<span class="input-group-text" id="fullName"><i class="bi bi-person-vcard-fill"></i></span>
+						<input type="text" class="form-control" placeholder="Full name" aria-label="fullName" aria-describedby="fullName" value="<?= $row['FullName'] ?>" >
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<a href="editProfil.php" class="btn btn-lg btn-primary">Save</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+
+	<?php } ?>
 
 
-<?php include $tpl . 'footer.php'; ?>
+	<?php include $tpl . 'footer.php'; ?>

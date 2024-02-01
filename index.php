@@ -1,111 +1,79 @@
 <?php
-    ob_start();
-    session_start();
-    $pageTitle = 'Tank-Store';
-    include 'init.php';
+ob_start();
+session_start();
+$pageTitle = 'Tank-Store';
+include 'init.php';
 ?>
 
-<div class="container" style="margin-top: 20px;">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline mb-2" action="index.php" method="GET">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="search" placeholder="Ingrese marca o modelo">
-                </div>
-                <button type="submit" class="btn btn-primary ml-2">Buscar</button>
-                <a href="index.php" class="btn btn-info ml-2">Mostrar Todos</a>
-            </form>
-        </div>
-    </div>
-    <div style="margin-top: 20px;"></div>
-    <div class="row">
-    <?php
-    // Verificar si se ha enviado una búsqueda
-    $search = isset($_GET['search']) ? $_GET['search'] : '';
+<main class="container py-3">
+	<div class="row">
+		<?php
+		// Verificar si se ha enviado una búsqueda
+		$search = isset($_GET['search']) ? $_GET['search'] : '';
 
-    // Construir la condición de búsqueda en la consulta SQL
-    $condition = !empty($search) ? "WHERE Name LIKE '%$search%'" : 'WHERE Approve = 1';
+		// Construir la condición de búsqueda en la consulta SQL
+		$condition = !empty($search) ? "WHERE Name LIKE '%$search%'" : 'WHERE Approve = 1';
 
-    $allItems = getAllFrom('*', 'items', $condition, '', 'Item_ID');
+		$allItems = getAllFrom('*', 'items', $condition, '', 'Item_ID');
 
-    // Contar el número de resultados de la búsqueda
-    $resultCount = count($allItems);
+		// Contar el número de resultados de la búsqueda
+		$resultCount = count($allItems);
 
-    if ($resultCount == 0 && !empty($search)) {
-        // Si no se encontraron resultados y se realizó una búsqueda
-        echo '<div class="alert alert-warning" role="alert">Lo siento, no se encontraron resultados. ¡Pero puedes consultarnos aquí! ';
-        echo '<a href="https://wa.me/3364338670?text=Hola!%20Quisiera%20consultar%20por%20un%20tanque%20de%20radiador" target="_blank" class="btn btn-success" style="font-size: 18px; margin-left: 10px;">Consultar por WhatsApp</a>';
-        echo '</div>';
-    }
+		if ($resultCount == 0 && !empty($search)) {
+			// Si no se encontraron resultados y se realizó una búsqueda
+		?>
+			<div class="col-12">
+				<div class="alert alert-warning" role="alert">
+					Lo siento, no se encontraron resultados. ¡Pero puedes consultarnos aquí!
+					<br>
+					<a class="btn btn-success my-2" href="https://wa.me/3364338670?text=Hola!%20Quisiera%20consultar%20por%20un%20tanque%20de%20radiador" target="_blank">Consultar por WhatsApp</a>
+				</div>
+			</div>
+			<?php
+		} else {
+			foreach ($allItems as $item) {
+			?>
+				<div class="col-10 col-md-10 col-lg-4 col-xl-3 mb-3 offset-1 offset-lg-0">
+					<div class="card shadow-sm">
 
-    $count = 0; // Variable para llevar el conteo de tarjetas en la fila
-
-    foreach ($allItems as $item) {
-		echo '<div class="col-sm-12 col-md-6 col-lg-3">';
-        echo '<div class="thumbnail item-box height-match">';
-        
-        // // Modificación para mostrar "CONSULTAR" cuando el precio es 1
-        // if ($item['Price'] == 1) {
-        //     echo '<span class="price-tag">CONSULTAR</span>';
-        // } else {
-        //     // Formatear el precio con un punto en los separadores de miles
-        //     $formattedPrice = '$' . number_format($item['Price'], 0, ',', '.');
-        //     echo '<span class="price-tag">' . $formattedPrice . '</span>';
-        // }
-            
-        // Modificación para mostrar "CONSULTAR" cuando el precio es 1
-        if ($item['Price'] == 1) {
-            echo '<span class="price-tag" style="font-size: 24px; background-color: rgba(255, 0, 0, 1);">CONSULTAR</span>';
-        } else {
-            // Formatear el precio con un punto en los separadores de miles
-            $formattedPrice = '$' . number_format($item['Price'], 0, ',', '.');
-            echo '<span class="price-tag" style="font-size: 24px; background-color: rgba(255, 0, 0, 1);">' . $formattedPrice . '</span>';
-        }
-
-        // Agregar un pequeño espacio debajo del precio
-        echo '<div style="margin-bottom: 30px;"></div>';
-
-        if (empty($item['picture'])) {
-            echo "<img style='width:100%;height:auto;' src='admin/uploads/default.png' alt='' />";
-        } else {
-            echo "<img style='width:100%;height:auto;' src='admin/uploads/items/" . $item['picture'] . "' alt='' />";
-        }
-        
-        echo '<div class="caption">';
-        echo '<h3><a href="items.php?itemid='. $item['Item_ID'] .'" style="color: black">' . $item['Name'] .'</a></h3>';
-        echo "<p style='overflow-wrap: normal;overflow: hidden;'>". $item['Description'] . '</p>';
-                
-        // // Código y Botón de WhatsApp en la misma fila
-        // echo '<div class="item-buttons" style="display: flex; justify-content: space-between; align-items: center;">';
-        // echo '<span class="cod-label" style="font-size: 18px; font-weight: bold;">Cod: ' . $item['Country_Made'] . '</span>';
-        // echo '<a href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20' . $item['Country_Made'] . ',%20' . $item['Name'] . '" target="_blank" class="btn btn-success" style="margin-left: auto;">Pedir</a>';
-        // Código y Botón de WhatsApp en la misma fila
-        echo '<div class="item-buttons" style="display: flex; justify-content: space-between; align-items: center;">';
-        echo '<span class="cod-label" style="font-size: 24px; font-weight: bold;">Cod: ' . $item['Country_Made'] . '</span>';
-        echo '<a href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20' . $item['Country_Made'] . ',%20' . $item['Name'] . '" target="_blank" class="btn btn-success" style="font-size: 24px; margin-left: auto;">Pedir</a>';
-        
-        echo '</div>';
-        
-        echo '</div>';
-        echo '</div>';
-        echo '</div>'; // Cierre del col-sm-6 col-md-3
-
-        $count++; // Incrementa el conteo de tarjetas en la fila
-
-        // Abre una nueva fila después de cada 4 tarjetas
-        if ($count % 4 == 0) {
-            echo '</div><div class="row">';
-        }
-    }
-
-    // Cierra el div de la última fila
-    echo '</div>';
-    ?>
-    </div>
-    <div style="margin-bottom: 20px;"></div>
-</div>
+						<?php
+						if ($item['Price'] != 1) {
+							$formattedPrice = '$' . number_format($item['Price'], 0, ',', '.');
+						}
+						?>
+						<span class="bg-danger text-white fs-4 position-absolute mt-3 px-1 price-tag"> <?= $item['Price'] == 1 ? 'CONSULTAR' : $formattedPrice ?></span>
+						<?php
+						if (empty($item['picture'])) {
+						?>
+							<img class="card-img-top img-fluid" src='admin/uploads/default.png' alt='' />
+						<?php
+						} else {
+						?>
+							<img class="card-img-top" src='admin/uploads/items/<?= $item['picture'] ?>' alt='' />
+						<?php
+						}
+						?>
+						<div class="card-body">
+							<h5 class="card-title">
+								<a class="h3 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="items.php?itemid=<?= $item['Item_ID'] ?>"><?= $item['Name'] ?></a>
+							</h5>
+							<p class="card-text fs-5">
+								<?= $item['Description'] ?>
+							</p>
+							<span class="text-start h4">Cod: <?= $item['Country_Made'] ?></span>
+							<a class="btn btn-success d-none d-lg-block float-end fw-bolder" href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20<?= $item['Country_Made'] ?>,%20<?= $item['Name'] ?>" target="_blank">Pedir</a>
+							<a class="btn btn-lg d-lg-none btn-success float-end fw-bolder" href="https://wa.me/3364338670?text=Hola!%20Me%20gustaría%20consultar%20sobre%20el%20tanque%20Cod:%20<?= $item['Country_Made'] ?>,%20<?= $item['Name'] ?>" target="_blank">Pedir</a>
+						</div>
+					</div>
+				</div>
+		<?php
+			}
+		}
+		?>
+	</div>
+</main>
 
 <?php
-    include $tpl . 'footer.php'; 
-    ob_end_flush();
+include $tpl . 'footer.php';
+ob_end_flush();
 ?>
