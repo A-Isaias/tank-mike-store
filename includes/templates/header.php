@@ -5,6 +5,8 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<link rel="icon" type="image/png" href="<?= $fav ?>">
+
 	<title>
 		<?php getTitle() ?>
 	</title>
@@ -65,38 +67,38 @@
 				</button> -->
 
 				<!-- <div class="collapse navbar-collapse" id="navbarUserMenu"> -->
-					<ul class="navbar-nav me-auto">
-						<?php
-						if (isset($_SESSION['user'])) {
-						?>
-							<li class="nav-item dropdown" data-bs-theme="ligh">
-								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									<?php echo $sessionUser ?>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="profile.php">Mi Perfil</a></li>
-									<li><a class="dropdown-item" href="newad.php">Nuevo Item</a></li>
-									<li><a class="dropdown-item" href="myItems.php">Mis Items</a></li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li><a class="dropdown-item" href="logout.php">Logout</a></li>
-								</ul>
-							</li>
+				<ul class="navbar-nav me-auto">
+					<?php
+					if (isset($_SESSION['user'])) {
+					?>
+						<li class="nav-item dropdown" data-bs-theme="ligh">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<?php echo $sessionUser ?>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="profile.php">Mi Perfil</a></li>
+								<li><a class="dropdown-item" href="newad.php">Nuevo Item</a></li>
+								<li><a class="dropdown-item" href="myItems.php">Mis Items</a></li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li><a class="dropdown-item" href="logout.php">Logout</a></li>
+							</ul>
+						</li>
 
-						<?php
-						} else {
-						?>
-							<li class="nav-item">
-								<a class="nav-link" href="login.php">
-									Login/Signup
-								</a>
-							</li>
-						<?php } ?>
-					</ul>
-					<div class="d-flex" role="search">
-							<a class="btn btn-small btn-success" href="https://api.whatsapp.com/send?phone=3364338670&text=Hola%21%20Quería%20consultar%20sobre%20los%20tanques%20para%20radiadores" target="_blank">Consultas <i class="bi bi-whatsapp"></i> 3364338670</a>
-					</div>
+					<?php
+					} else {
+					?>
+						<li class="nav-item">
+							<a class="nav-link" href="login.php">
+								Login/Signup
+							</a>
+						</li>
+					<?php } ?>
+				</ul>
+				<div class="d-flex" role="search">
+					<a class="btn btn-small btn-success" href="https://api.whatsapp.com/send?phone=3364338670&text=Hola%21%20Quería%20consultar%20sobre%20los%20tanques%20para%20radiadores" target="_blank">Consultas <i class="bi bi-whatsapp"></i> 3364338670</a>
+				</div>
 				<!-- </div> -->
 
 
@@ -104,7 +106,7 @@
 		</nav>
 		<nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
 			<div class="container">
-				
+
 				<a class="navbar-brand" href="index.php">
 					<i class="bi bi-house"></i>
 					<?php echo lang('HOME_ADMIN') ?>
@@ -119,9 +121,8 @@
 						<div class="input-group">
 							<input class="form-control" type="text" name="search" placeholder="Ingrese marca o modelo" aria-label="Search" value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
 							<?php
-							if (isset($_GET['search']))
-							{
-								?>
+							if (isset($_GET['search'])) {
+							?>
 								<button class="btn btn-outline-secondary" type="button" data-href="<?= $_SERVER['PHP_SELF'] ?>" id="search-reset"><i class="bi bi-x-circle-fill text-primary"></i></button>
 							<?php } ?>
 							<button class="btn btn-outline-warning" type="submit">Buscar</button>
@@ -133,11 +134,11 @@
 							<a class="btn btn-small btn-success active" role="button" href="https://api.whatsapp.com/send?phone=3364338670&text=Hola%21%20Quería%20consultar%20sobre%20los%20tanques%20para%20radiadores" target="_blank" style="margin-top: 7px;"><i class="fa fa-cel" aria-hidden="true"></i>CONSULTAR POR
 						WhatsApp</a>
 						</li> -->
-						
+
 						<?php
 						$allCats = getAllFrom("*", "categories", "where parent = 0", "", "ID", "ASC");
 						foreach ($allCats as $cat) {
-							?>
+						?>
 							<li class="nav-item">
 								<a class="nav-link" href="categories.php?pageid=<?= $cat['ID'] ?>">
 									<?= $cat['Name'] ?>

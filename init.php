@@ -24,6 +24,7 @@
 	$func	= 'includes/functions/'; // Functions Directory
 	$css 	= 'layout/css/'; // Css Directory
 	$js 	= 'layout/js/'; // Js Directory
+	$fav = 'admin/uploads/store.png'; // Favicon directory
 
 	// Include The Important Files
 
